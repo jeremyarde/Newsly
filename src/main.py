@@ -1,5 +1,5 @@
-import src.Text_Utilities.Text_Summarization as ts
+from src.Summarizers.BaseSummarizer import BaseSummarizer
 
+s = BaseSummarizer()
+s.get_summary()
 
-# init commit
-ts.things()

@@ -1,3 +1,5 @@
+from typing import Type
+
 from sumy.parsers.html import HtmlParser
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
@@ -8,18 +10,27 @@ from sumy.summarizers.random import RandomSummarizer as RandomSumy
 from sumy.nlp.stemmers import Stemmer
 from sumy.utils import get_stop_words
 
+from src.Enums.SummarizerEnums import Summarizer
+from src.Summarizers.BaseSummarizer import BaseSummarizer
+
 
 class SumySummarizer:
-    def __init__(self, stemmer=None, tokenizer=None, summarizer=None):
-        self.Stemmer = stemmer
+    def __init__(self, tokenizer=None, stemmer=None, summarizerType=Type[Summarizer]):
         self.Tokenizer = tokenizer
-        self.Summarizer = summarizer
+        self.Summarizer = None
 
-    @staticmethod
-    def get_summary() -> []:
+        # LSASumy(stemmer) if summarizerType.name is 'LSA'
+
+
+    def get_summary(self, text_source: str) -> []:
+        self.Summarizer.get_summary(text_source)
+
         stemmer = Stemmer('english')
         lsa = LSASumy(stemmer)
         ed = EdSumy(stemmer)
+        ed.bonus_words = ['Bonus']
+        ed.stigma_words = ['Stigma']
+        ed.null_words = ['Null']
         lex = LexRankSumy(stemmer)
         rand = RandomSumy(stemmer)
 
