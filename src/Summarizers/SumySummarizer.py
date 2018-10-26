@@ -15,45 +15,29 @@ from src.Summarizers.BaseSummarizer import BaseSummarizer
 
 
 class SumySummarizer:
-    def __init__(self, tokenizer=None, stemmer=None, summarizerType=Type[Summarizer]):
-        self.Tokenizer = tokenizer
+    def __init__(self, tokenizer=None, stemmer=None, summarizerType: Summarizer=Summarizer.LSA):
+        self.Tokenizer = Tokenizer('english') if tokenizer is None else tokenizer
         self.Summarizer = None
+        self.Stemmer = Stemmer('english') if stemmer is None else stemmer
 
         if summarizerType is Summarizer.LSA:
-            self.Summarizer = LSASumy(stemmer)
+            self.Summarizer = LSASumy(self.Stemmer)
         elif summarizerType is Summarizer.Edmundson:
-            self.Summarizer = EdSumy(stemmer)
+            self.Summarizer = EdSumy(self.Stemmer)
             self.Summarizer.bonus_words = ['Bonus']
             self.Summarizer.stigma_words = ['Stigma']
             self.Summarizer.null_words = ['Null']
         elif summarizerType is Summarizer.LexRank:
-            self.Summarizer = LexRankSumy(stemmer)
+            self.Summarizer = LexRankSumy(self.Stemmer)
         elif summarizerType is Summarizer.Random:
-            self.Summarizer = RandomSumy(stemmer)
+            self.Summarizer = RandomSumy(self.Stemmer)
         else:
-            raise Exception(f"{0}Summarizer type is not defined", summarizerType)
+            raise Exception(f"{summarizerType}Summarizer type is not defined")
 
-    def get_summary(self, text_source: str) -> []:
-        self.Summarizer.get_summary(text_source)
+    def get_summary(self, text_source: str, num_sentences: int=5) -> []:
+        # url = "https://www.cbc.ca/news/canada/toronto/skinny-dipping-sharks-ripleys-1.4862945"
+        parser = HtmlParser.from_url(text_source, self.Tokenizer)
 
-        stemmer = Stemmer('english')
-        lsa = LSASumy(stemmer)
-
-        lex = LexRankSumy(stemmer)
-        rand = RandomSumy(stemmer)
-
-        url = "https://www.cbc.ca/news/canada/toronto/skinny-dipping-sharks-ripleys-1.4862945"
-        parser = HtmlParser.from_url(url, Tokenizer('english'))
         doc = parser.document
 
-        results = {'lsa': lsa(doc, 5),
-                   'ed': ed(doc, 5),
-                   'lex': lex(doc, 5),
-                   'rand': rand(doc, 5)}
-        # lsatext = lsa(doc, 5)
-        # edt = ed(doc, 5)
-        # lext = lex(doc, 5)
-        # randt = rand(doc, 5)
-
-        for key in results:
-            print(results.get(key))
+        return self.Summarizer(doc, num_sentences)
