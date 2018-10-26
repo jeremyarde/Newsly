@@ -19,18 +19,26 @@ class SumySummarizer:
         self.Tokenizer = tokenizer
         self.Summarizer = None
 
-        # LSASumy(stemmer) if summarizerType.name is 'LSA'
-
+        if summarizerType is Summarizer.LSA:
+            self.Summarizer = LSASumy(stemmer)
+        elif summarizerType is Summarizer.Edmundson:
+            self.Summarizer = EdSumy(stemmer)
+            self.Summarizer.bonus_words = ['Bonus']
+            self.Summarizer.stigma_words = ['Stigma']
+            self.Summarizer.null_words = ['Null']
+        elif summarizerType is Summarizer.LexRank:
+            self.Summarizer = LexRankSumy(stemmer)
+        elif summarizerType is Summarizer.Random:
+            self.Summarizer = RandomSumy(stemmer)
+        else:
+            raise Exception(f"{0}Summarizer type is not defined", summarizerType)
 
     def get_summary(self, text_source: str) -> []:
         self.Summarizer.get_summary(text_source)
 
         stemmer = Stemmer('english')
         lsa = LSASumy(stemmer)
-        ed = EdSumy(stemmer)
-        ed.bonus_words = ['Bonus']
-        ed.stigma_words = ['Stigma']
-        ed.null_words = ['Null']
+
         lex = LexRankSumy(stemmer)
         rand = RandomSumy(stemmer)
 
