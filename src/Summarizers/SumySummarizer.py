@@ -10,26 +10,26 @@ from sumy.summarizers.random import RandomSummarizer as RandomSumy
 from sumy.nlp.stemmers import Stemmer
 from sumy.utils import get_stop_words
 
-from src.Enums.SummarizerEnums import Summarizer
+from src.Enums.SummarizerEnums import SummarizerType
 from src.Summarizers.BaseSummarizer import BaseSummarizer
 
 
 class SumySummarizer:
-    def __init__(self, tokenizer=None, stemmer=None, summarizerType: Summarizer=Summarizer.LSA):
+    def __init__(self, tokenizer=None, stemmer=None, summarizerType: SummarizerType=SummarizerType.LSA):
         self.Tokenizer = Tokenizer('english') if tokenizer is None else tokenizer
         self.Summarizer = None
         self.Stemmer = Stemmer('english') if stemmer is None else stemmer
 
-        if summarizerType is Summarizer.LSA:
+        if summarizerType is SummarizerType.LSA:
             self.Summarizer = LSASumy(self.Stemmer)
-        elif summarizerType is Summarizer.Edmundson:
+        elif summarizerType is SummarizerType.Edmundson:
             self.Summarizer = EdSumy(self.Stemmer)
             self.Summarizer.bonus_words = ['Bonus']
             self.Summarizer.stigma_words = ['Stigma']
             self.Summarizer.null_words = ['Null']
-        elif summarizerType is Summarizer.LexRank:
+        elif summarizerType is SummarizerType.LexRank:
             self.Summarizer = LexRankSumy(self.Stemmer)
-        elif summarizerType is Summarizer.Random:
+        elif summarizerType is SummarizerType.Random:
             self.Summarizer = RandomSumy(self.Stemmer)
         else:
             raise Exception(f"{summarizerType}Summarizer type is not defined")

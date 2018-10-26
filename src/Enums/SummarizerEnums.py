@@ -1,16 +1,16 @@
 from enum import Enum
 
 
-class Summarizer(Enum):
+class SummarizerType(Enum):
     LSA = 1
     Edmundson = 2
     LexRank = 3
     Random = 4
 
 
-class Stemmer(Enum):
+class StemmerType(Enum):
     Sumy = 1
 
 
-class Tokenizer(Enum):
+class TokenizerType(Enum):
     Sumy = 1

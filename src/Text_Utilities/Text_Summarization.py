@@ -7,7 +7,8 @@ from sumy.utils import get_stop_words
 
 
 def things():
-    stemmer = Stemmer('english')
+    # stemmer = Stemmer('english')
+    # tokenizer = Tokenizer('english')
     summarizer = Summarizer(stemmer)
 
     url = "https://www.cbc.ca/news/canada/toronto/skinny-dipping-sharks-ripleys-1.4862945"
