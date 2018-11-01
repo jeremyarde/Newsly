@@ -1,3 +1,4 @@
+import os
 from configparser import ConfigParser
 
 from sumy.nlp.stemmers import Stemmer
@@ -29,7 +30,10 @@ config.read('config.ini')
 #            'rand': rand.get_summary(url2)}
 #
 # print(results)
+t = os.getcwd()
 
-df = DataHelper.read_csv(config['PATHS']['SpecFolder'])
+# df = DataHelper.read_excel(config['PATHS']['DataExcel'])
 
-"../Data/crawled_data.csv"
+df = DataHelper.read_csv(config['PATHS']['DataCsv'])
+
+print("")
