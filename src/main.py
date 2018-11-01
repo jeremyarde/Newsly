@@ -1,6 +1,7 @@
 import os
 from configparser import ConfigParser
 
+import numpy as np
 from sumy.nlp.stemmers import Stemmer
 from sumy.nlp.tokenizers import Tokenizer
 
@@ -36,4 +37,5 @@ t = os.getcwd()
 
 df = DataHelper.read_csv(config['PATHS']['DataCsv'])
 
+unique = np.unique(df['BIAS'])
 print("")
