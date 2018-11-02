@@ -37,5 +37,8 @@ t = os.getcwd()
 
 df = DataHelper.read_csv(config['PATHS']['DataCsv'])
 
-unique = np.unique(df['BIAS'])
+unique = df['BIAS'].apply(sorted, axis=1).unique()
+unique1 = df['CLASS'].unique()
+unique2 = df['SOURCE'].unique()
+
 print("")
