@@ -36,9 +36,14 @@ t = os.getcwd()
 # df = DataHelper.read_excel(config['PATHS']['DataExcel'])
 
 df = DataHelper.read_csv(config['PATHS']['DataCsv'])
-
-unique = df['BIAS'].apply(sorted, axis=1).unique()
+unique = df['BIAS'].unique()
 unique1 = df['CLASS'].unique()
 unique2 = df['SOURCE'].unique()
+
+# df2 = DataHelper.read_csv(config['PATHS']['DataExcel'])
+# uniquez = df['BIAS'].unique()
+# unique1z = df['CLASS'].unique()
+# unique2z = df['SOURCE'].unique()
+
 
 print("")
