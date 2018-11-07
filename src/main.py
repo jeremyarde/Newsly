@@ -4,6 +4,8 @@ from configparser import ConfigParser
 import numpy as np
 from numpy import unicode
 from sklearn import linear_model
+from sklearn.metrics import make_scorer, fbeta_score
+from sklearn.svm import LinearSVC
 from sumy.nlp.stemmers import Stemmer
 from sumy.nlp.tokenizers import Tokenizer
 
@@ -13,8 +15,7 @@ from src.Models.TestModel import ModelType
 from src.Summarizers.BaseSummarizer import BaseSummarizer
 from src.Summarizers.SumySummarizer import SumySummarizer
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.model_selection import train_test_split
-
+from sklearn.model_selection import train_test_split, GridSearchCV
 
 config = ConfigParser()
 config.read('../config.ini')
@@ -60,6 +61,11 @@ text_data = text_data.values.astype('U')
 train_data = vectorizer.fit_transform(text_data)
 train_labels = train_labels.astype('U')
 
-x_train, x_test, y_train, t_test = train_test_split(train_data, train_labels, test_size=0.3, random_state=1)
+x_train, x_test, y_train, y_test = train_test_split(train_data, train_labels, test_size=0.3, random_state=1)
+
+grid = GridSearchCV(LinearSVC(), scoring=make_scorer(fbeta_score, beta=2))
+grid = grid.fit(x_train, y_train)
+
+# model.fit(x_train, y_train)
 
 print("")
