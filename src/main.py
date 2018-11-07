@@ -2,16 +2,22 @@ import os
 from configparser import ConfigParser
 
 import numpy as np
+from numpy import unicode
+from sklearn import linear_model
 from sumy.nlp.stemmers import Stemmer
 from sumy.nlp.tokenizers import Tokenizer
 
 from src.DataUtilities import DataHelper
 from src.Enums.SummarizerEnums import SummarizerType
+from src.Models.TestModel import ModelType
 from src.Summarizers.BaseSummarizer import BaseSummarizer
 from src.Summarizers.SumySummarizer import SumySummarizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+
 
 config = ConfigParser()
-config.read('config.ini')
+config.read('../config.ini')
 
 #
 # stemmer = Stemmer('english')
@@ -36,10 +42,24 @@ t = os.getcwd()
 # df = DataHelper.read_excel(config['PATHS']['DataExcel'])
 
 df = DataHelper.read_csv(config['PATHS']['DataCsv'])
-biases = df['BIAS'].unique()
+df = df.dropna() # drop all rows with nan
+biases_unique = df['BIAS'].astype('U').unique()
 classes = df['CLASS'].unique()
 sources = df['SOURCE']
 titles = df['TITLE']
 
+model = linear_model.LogisticRegression()
+vectorizer = TfidfVectorizer()
+
+# replace newlines ( replace with tokenization later...
+text_data = df['TITLE'].str.replace('\n', '')
+train_labels = df['BIAS'].str.replace('\n', '')
+
+# text_list_unicode = [unicode(s, 'utf-8') for s in text_list]
+text_data = text_data.values.astype('U')
+train_data = vectorizer.fit_transform(text_data)
+train_labels = train_labels.astype('U')
+
+x_train, x_test, y_train, t_test = train_test_split(train_data, train_labels, test_size=0.3, random_state=1)
 
 print("")
