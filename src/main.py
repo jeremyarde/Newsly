@@ -4,7 +4,7 @@ from configparser import ConfigParser
 import numpy as np
 from numpy import unicode
 from sklearn import linear_model
-from sklearn.metrics import make_scorer, fbeta_score
+from sklearn.metrics import make_scorer, fbeta_score, accuracy_score
 from sklearn.svm import LinearSVC
 from sumy.nlp.stemmers import Stemmer
 from sumy.nlp.tokenizers import Tokenizer
@@ -63,8 +63,10 @@ train_labels = train_labels.astype('U')
 
 x_train, x_test, y_train, y_test = train_test_split(train_data, train_labels, test_size=0.3, random_state=1)
 
-grid = GridSearchCV(LinearSVC(), scoring=make_scorer(fbeta_score, beta=2))
-grid = grid.fit(x_train, y_train)
+LinearSVC()
+
+# grid = GridSearchCV(LinearSVC(), scoring=make_scorer(accuracy_score), param_grid={'C': [1, 10]})
+# grid = grid.fit(x_train, y_train)
 
 # model.fit(x_train, y_train)
 
