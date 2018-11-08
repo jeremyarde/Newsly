@@ -63,8 +63,12 @@ train_labels = train_labels.astype('U')
 
 x_train, x_test, y_train, y_test = train_test_split(train_data, train_labels, test_size=0.3, random_state=1)
 
-LinearSVC()
+svc = LinearSVC()
+svc.fit(X=x_train, y=y_train)
+print(svc.coef_)
 
+mean = f"Mean accuracy: {0}".format(svc.score(x_test, y_test))
+print(mean)
 # grid = GridSearchCV(LinearSVC(), scoring=make_scorer(accuracy_score), param_grid={'C': [1, 10]})
 # grid = grid.fit(x_train, y_train)
 
