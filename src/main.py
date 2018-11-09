@@ -63,19 +63,22 @@ train_labels = train_labels.astype('U')
 
 x_train, x_test, y_train, y_test = train_test_split(train_data, train_labels, test_size=0.3, random_state=1)
 
-# svc = LinearSVC()
-# svc.fit(X=x_train, y=y_train)
-# print(svc.coef_)
 
 svc = SVC(gamma='scale')
 parameters = {'kernel':('linear', 'rbf'), 'C': [1, 10]}
-clf = GridSearchCV(svc, parameters, cv=5)
+print('Starting Gridsearch...')
+clf = GridSearchCV(svc, parameters, cv=5, verbose=True, n_jobs=5)
 clf.fit(x_train, y_train)
 sorted(clf.cv_results_.keys())
 
-mean = svc.score(x_test, y_test)
-mean_string = f"Mean accuracy: {mean}"
-print(mean_string)
+# svc = LinearSVC()
+# svc.fit(X=x_train, y=y_train)
+# print(svc.coef_)
+# mean = svc.score(x_test, y_test)
+# mean_string = f"Mean accuracy: {mean}"
+# print(mean_string)
+
+
 # grid = GridSearchCV(LinearSVC(), scoring=make_scorer(accuracy_score), param_grid={'C': [1, 10]})
 # grid = grid.fit(x_train, y_train)
 
