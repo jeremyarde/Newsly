@@ -5,7 +5,7 @@ import numpy as np
 from numpy import unicode
 from sklearn import linear_model
 from sklearn.metrics import make_scorer, fbeta_score, accuracy_score
-from sklearn.svm import LinearSVC
+from sklearn.svm import LinearSVC, SVC
 from sumy.nlp.stemmers import Stemmer
 from sumy.nlp.tokenizers import Tokenizer
 
@@ -43,7 +43,7 @@ t = os.getcwd()
 # df = DataHelper.read_excel(config['PATHS']['DataExcel'])
 
 df = DataHelper.read_csv(config['PATHS']['DataCsv'])
-df = df.dropna() # drop all rows with nan
+df = df.dropna()  # drop all rows with nan
 biases_unique = df['BIAS'].astype('U').unique()
 classes = df['CLASS'].unique()
 sources = df['SOURCE']
@@ -63,12 +63,19 @@ train_labels = train_labels.astype('U')
 
 x_train, x_test, y_train, y_test = train_test_split(train_data, train_labels, test_size=0.3, random_state=1)
 
-svc = LinearSVC()
-svc.fit(X=x_train, y=y_train)
-print(svc.coef_)
+# svc = LinearSVC()
+# svc.fit(X=x_train, y=y_train)
+# print(svc.coef_)
 
-mean = f"Mean accuracy: {0}".format(svc.score(x_test, y_test))
-print(mean)
+svc = SVC(gamma='scale')
+parameters = {'kernel':('linear', 'rbf'), 'C': [1, 10]}
+clf = GridSearchCV(svc, parameters, cv=5)
+clf.fit(x_train, y_train)
+sorted(clf.cv_results_.keys())
+
+mean = svc.score(x_test, y_test)
+mean_string = f"Mean accuracy: {mean}"
+print(mean_string)
 # grid = GridSearchCV(LinearSVC(), scoring=make_scorer(accuracy_score), param_grid={'C': [1, 10]})
 # grid = grid.fit(x_train, y_train)
 
