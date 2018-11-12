@@ -13,6 +13,7 @@ from sumy.nlp.tokenizers import Tokenizer
 
 from src.DataUtilities import DataHelper
 from src.Enums.SummarizerEnums import SummarizerType
+from src.Models import SklearnTest
 from src.Models.TestModel import ModelType
 from src.Summarizers.BaseSummarizer import BaseSummarizer
 from src.Summarizers.SumySummarizer import SumySummarizer
@@ -70,36 +71,7 @@ train_labels = train_labels.astype('U')
 
 x_train, x_test, y_train, y_test = train_test_split(train_data, train_labels, test_size=0.3, random_state=1)
 
-# # Grid search
-# svc = SVC(gamma='scale')
-# parameters = {'kernel':('linear', 'rbf'), 'C': [1, 10]}
-# print('Starting Gridsearch...')
-# clf = GridSearchCV(svc, parameters, cv=5, verbose=True, n_jobs=5)
-# clf.fit(x_train, y_train)
-# sorted(clf.cv_results_.keys())
-# clf.score(x_test, y_test)
-
-print("Linear SVC")
-svc = LinearSVC(verbose=True)
-svc.fit(X=x_train, y=y_train)
-print(svc.coef_)
-mean = svc.score(x_test, y_test)
-mean_string = f"Mean accuracy: {mean}"
-print(mean_string)
-
-
-# Decision Tree
-print("Decision Tree")
-clf = DecisionTreeClassifier(max_depth=None, min_samples_split=2, random_state=0)
-scores = cross_val_score(clf, x_train, y_train, cv=5)
-print(scores.mean())
-
-
-# Random Forrest
-print("Random Forest")
-clf = RandomForestClassifier(n_estimators=10, max_depth=None, min_samples_split=2, random_state=0)
-scores = cross_val_score(clf, x_train, y_train, cv=5)
-print(scores.mean())
+# SklearnTest.run_sklearn(x_train, y_train, x_test, y_test)
 
 
 print("")
