@@ -1,24 +1,12 @@
 import os
 from configparser import ConfigParser
 
-import numpy as np
-from numpy import unicode
-from sklearn import linear_model
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import make_scorer, fbeta_score, accuracy_score
-from sklearn.svm import LinearSVC, SVC
-from sklearn.tree import DecisionTreeClassifier
-from sumy.nlp.stemmers import Stemmer
-from sumy.nlp.tokenizers import Tokenizer
+from keras.preprocessing.text import Tokenizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
 
 from src.DataUtilities import DataHelper
-from src.Enums.SummarizerEnums import SummarizerType
 from src.Models import SklearnTest
-from src.Models.TestModel import ModelType
-from src.Summarizers.BaseSummarizer import BaseSummarizer
-from src.Summarizers.SumySummarizer import SumySummarizer
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
 
 config = ConfigParser()
 config.read('../config.ini')
@@ -57,8 +45,6 @@ df = df[df['BIAS'].isin(bias_classes)]
 sources = df['SOURCE']
 titles = df['TITLE']
 
-
-
 # replace newlines ( replace with tokenization later...
 text_data = df['TITLE'].str.replace('\n', '')
 train_labels = df['BIAS'].str.replace('\n', '')
@@ -66,12 +52,15 @@ train_labels = df['BIAS'].str.replace('\n', '')
 # text_list_unicode = [unicode(s, 'utf-8') for s in text_list]
 text_data = text_data.values.astype('U')
 vectorizer = TfidfVectorizer()
+tokenizer = Tokenizer(num_words=200)
+
+text_data = [tokenizer.fit_on_texts(sentence) for sentence in text_data]
 train_data = vectorizer.fit_transform(text_data)
 train_labels = train_labels.astype('U')
 
-x_train, x_test, y_train, y_test = train_test_split(train_data, train_labels, test_size=0.3, random_state=1)
+x_train, x_test, y_train, y_test = train_test_split(train_data, train_labels, test_size=0.2, random_state=1)
 
-# SklearnTest.run_sklearn(x_train, y_train, x_test, y_test)
+SklearnTest.run_sklearn(x_train, y_train, x_test, y_test)
 
 
 print("")
