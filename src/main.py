@@ -4,8 +4,9 @@ from configparser import ConfigParser
 from keras.preprocessing.text import Tokenizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
+from nltk import corpus
 
-from src.DataUtilities import DataHelper
+from src.DataUtilities import DataHelper, WordEmbeddingsTest
 from src.Models import SklearnTest
 
 config = ConfigParser()
@@ -51,16 +52,25 @@ train_labels = df['BIAS'].str.replace('\n', '')
 
 # text_list_unicode = [unicode(s, 'utf-8') for s in text_list]
 text_data = text_data.values.astype('U')
-vectorizer = TfidfVectorizer()
-tokenizer = Tokenizer(num_words=200)
 
-text_data = [tokenizer.fit_on_texts(sentence) for sentence in text_data]
-train_data = vectorizer.fit_transform(text_data)
+WordEmbeddingsTest.get_embeddings(text_data)
+
+# tfidf stuff
+# vectorizer = TfidfVectorizer()
+# tokenizer = Tokenizer(num_words=200)
+#
+# tokenizer.fit_on_texts(text_data.tolist())
+# encoded_text_data = tokenizer.texts_to_matrix(text_data.tolist(), mode='count')
+# train_data = encoded_text_data
+
+# train_data = vectorizer.fit_transform(text_data)
 train_labels = train_labels.astype('U')
 
 x_train, x_test, y_train, y_test = train_test_split(train_data, train_labels, test_size=0.2, random_state=1)
 
-SklearnTest.run_sklearn(x_train, y_train, x_test, y_test)
+predict_texts = ['trying to predict on a sentence', 'other sentence to try and predict on']
+predict_texts = tokenizer.texts_to_matrix(predict_texts, mode='count')
+SklearnTest.run_sklearn(x_train, y_train, x_test, y_test, predict_texts)
 
 
 print("")

@@ -5,7 +5,7 @@ from sklearn.svm import LinearSVC, SVC
 from sklearn.tree import DecisionTreeClassifier
 
 
-def run_sklearn(x_train, y_train, x_test, y_test):
+def run_sklearn(x_train, y_train, x_test, y_test, predict_text):
     print("Linear SVC")
     svc = LinearSVC(verbose=True)
     svc.fit(X=x_train, y=y_train)
@@ -13,7 +13,7 @@ def run_sklearn(x_train, y_train, x_test, y_test):
     mean = svc.score(x_test, y_test)
     mean_string = f"Mean accuracy: {mean}"
     print(mean_string)
-    predict(svc, "I hate liberals so much. I want to give guns to babies")
+    predict(svc, predict_text)
 
     # Decision Tree
     print("Decision Tree")
@@ -37,8 +37,8 @@ def run_sklearn(x_train, y_train, x_test, y_test):
     # clf.score(x_test, y_test)
 
 def predict(classifier, text):
-    vectorizer = TfidfVectorizer()
-    vectorized_text = vectorizer.transform([text])
-    prediction = classifier.predict(vectorized_text)
+    # vectorizer = TfidfVectorizer()
+    # vectorized_text = vectorizer.transform([text])
+    prediction = classifier.predict(text)
 
     print(f"Prediction results: {prediction}")
