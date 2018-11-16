@@ -7,23 +7,23 @@ from sklearn.tree import DecisionTreeClassifier
 
 def run_sklearn(x_train, y_train, x_test, y_test, predict_text):
     print("Linear SVC")
-    svc = LinearSVC(verbose=True)
+    svc = LinearSVC(verbose=True, max_iter=10000, penalty=0.5)
     svc.fit(X=x_train, y=y_train)
     print(svc.coef_)
     mean = svc.score(x_test, y_test)
     mean_string = f"Mean accuracy: {mean}"
     print(mean_string)
-    predict(svc, predict_text)
+    # predict(svc, predict_text)
 
     # Decision Tree
     print("Decision Tree")
-    dtc = DecisionTreeClassifier(max_depth=None, min_samples_split=2, random_state=0)
+    dtc = DecisionTreeClassifier(max_depth=None, min_samples_split=2)
     scores = cross_val_score(dtc, x_train, y_train, cv=5)
     print(scores.mean())
 
     # Random Forrest
     print("Random Forest")
-    rfc = RandomForestClassifier(n_estimators=10, max_depth=None, min_samples_split=2, random_state=0)
+    rfc = RandomForestClassifier(n_estimators=10, max_depth=None, min_samples_split=2)
     scores = cross_val_score(rfc, x_train, y_train, cv=5)
     print(scores.mean())
 
