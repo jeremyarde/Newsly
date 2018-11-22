@@ -1,13 +1,14 @@
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import cross_val_score, GridSearchCV
+from sklearn.neural_network import MLPClassifier
 from sklearn.svm import LinearSVC, SVC
 from sklearn.tree import DecisionTreeClassifier
 
 
 def run_sklearn(x_train, y_train, x_test, y_test, predict_text):
     print("Linear SVC")
-    svc = LinearSVC(verbose=True, max_iter=10000, penalty=0.5)
+    svc = LinearSVC(max_iter=10000)
     svc.fit(X=x_train, y=y_train)
     print(svc.coef_)
     mean = svc.score(x_test, y_test)
@@ -36,9 +37,16 @@ def run_sklearn(x_train, y_train, x_test, y_test, predict_text):
     # sorted(clf.cv_results_.keys())
     # clf.score(x_test, y_test)
 
+
 def predict(classifier, text):
     # vectorizer = TfidfVectorizer()
     # vectorized_text = vectorizer.transform([text])
     prediction = classifier.predict(text)
 
     print(f"Prediction results: {prediction}")
+
+
+def MlpSklearn(x_train, y_train: []):
+    clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2))
+    clf.fit(x_train, y_train)
+    clf.score()
