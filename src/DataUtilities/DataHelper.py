@@ -6,6 +6,20 @@ import xlrd as xlrd
 from keras_preprocessing.text import Tokenizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from keras.models import Model
+from keras.layers import LSTM, Activation, Dense, Dropout, Input, Embedding
+from keras.optimizers import RMSprop
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing import sequence
+from keras.utils import to_categorical
+from keras.callbacks import EarlyStopping
+
 
 config = ConfigParser()
 config.read('../config.ini')
@@ -54,6 +68,10 @@ def get_data():
 
     # train_data = vectorizer.fit_transform(text_data)
     train_labels = train_labels.astype('U')
+
+    sns.countplot(train_labels)
+    plt.xlabel('Label')
+    plt.title('Distribution of data')
 
     x_train, x_test, y_train, y_test = train_test_split(train_data, train_labels, test_size=0.2)
 

@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from nltk import corpus
 
 from src.DataUtilities import DataHelper
-from src.Models import SklearnTest
+from src.Models import SklearnTest, KerasTest
 
 config = ConfigParser()
 config.read('../config.ini')
@@ -34,6 +34,7 @@ config.read('../config.ini')
 
 x_train, y_train, x_test, y_test = DataHelper.get_data()
 
+KerasTest.keras_train(x_train, y_train, x_test, y_test)
 
 # predict_texts = ['trying to predict on a sentence', 'other sentence to try and predict on']
 # predict_texts = tokenizer.texts_to_matrix(predict_texts, mode='count')
