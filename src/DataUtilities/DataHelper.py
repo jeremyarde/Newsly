@@ -3,6 +3,7 @@ from configparser import ConfigParser
 
 import pandas
 import xlrd as xlrd
+from cloudpickle import cloudpickle
 from keras_preprocessing.text import Tokenizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
@@ -33,6 +34,11 @@ def read_csv(path_to_csv: str=''):
 def read_excel(path_to_excel: str):
     df = pandas.read_excel(xlrd.open_workbook(path_to_excel), engine='xlrd')
     return df
+
+
+def ibc_data():
+    [lib, con, neutral] = cloudpickle.load(open('ibcData.pkl', 'rb'))
+    return lib, con, neutral
 
 
 def get_data():
