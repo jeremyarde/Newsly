@@ -34,11 +34,11 @@ config.read('../config.ini')
 
 x_train, y_train, x_test, y_test = DataHelper.get_data()
 
-KerasTest.keras_train(x_train, y_train, x_test, y_test)
+# KerasTest.keras_train(x_train, y_train, x_test, y_test)
 
 # predict_texts = ['trying to predict on a sentence', 'other sentence to try and predict on']
 # predict_texts = tokenizer.texts_to_matrix(predict_texts, mode='count')
-# SklearnTest.run_sklearn(x_train, y_train, x_test, y_test, predict_texts)
+SklearnTest.run_sklearn(x_train, y_train, x_test, y_test)
 
 
 print("Done")

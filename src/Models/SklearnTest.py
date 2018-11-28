@@ -6,7 +6,7 @@ from sklearn.svm import LinearSVC, SVC
 from sklearn.tree import DecisionTreeClassifier
 
 
-def run_sklearn(x_train, y_train, x_test, y_test, predict_text):
+def run_sklearn(x_train, y_train, x_test, y_test):
     print("Linear SVC")
     svc = LinearSVC(max_iter=10000)
     svc.fit(X=x_train, y=y_train)

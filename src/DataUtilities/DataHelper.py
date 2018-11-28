@@ -94,8 +94,9 @@ def get_data():
 
     # turn the labels into one hot encoded versions
     one_hot_encoder = preprocessing.LabelEncoder()
-    train_labels = one_hot_encoder.fit(train_labels)
+    one_hot_encoder.fit(train_labels)
+    encoded_labels = one_hot_encoder.transform(train_labels)
 
-    x_train, x_test, y_train, y_test = train_test_split(train_data, train_labels, test_size=0.2)
+    x_train, x_test, y_train, y_test = train_test_split(train_data, encoded_labels, test_size=0.2)
 
     return x_train, x_test, y_train, y_test
