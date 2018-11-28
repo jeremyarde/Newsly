@@ -60,7 +60,7 @@ def print_distribution(train_labels):
     plt.title('Distribution of data')
 
 
-def get_data():
+def get_data(deep_model: bool=False):
     df_data = get_data_from_source()
     # samples, labels = get_series_from_df(df_data, {'inputs': 'BIAS', 'labels': 'CLASS'})
 
@@ -99,9 +99,10 @@ def get_data():
     y_train = one_hot_encoder.fit_transform(y_train)
     y_test = one_hot_encoder.fit_transform(y_test)
 
-    one_hot_encoder = preprocessing.OneHotEncoder(categorical_features=len(biases_unique))
-    y_train = one_hot_encoder.fit_transform(y_train)
-    y_test = one_hot_encoder.fit_transform(y_test)
+    if deep_model:
+        one_hot_encoder = preprocessing.OneHotEncoder()
+        y_train = one_hot_encoder.fit_transform(y_train.reshape(-1, 1))
+        y_test = one_hot_encoder.fit_transform(y_test.reshape(-1, 1))
 
     print(f"Counts:\nTrain: {len(x_train)}, {len(y_train)}\nTest: {len(x_test)}, {len(y_test)}")
     print(f"Shapes:\nTrain: {x_train.shape}, {y_train.shape}\nTest: {x_test.shape}, {y_test.shape}")
