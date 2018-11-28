@@ -93,10 +93,14 @@ def get_data():
     print_distribution(train_labels)
 
     # turn the labels into one hot encoded versions
-    one_hot_encoder = preprocessing.LabelEncoder()
+    # one_hot_encoder = preprocessing.LabelEncoder()
+    one_hot_encoder = preprocessing.LabelBinarizer()
     one_hot_encoder.fit(train_labels)
     encoded_labels = one_hot_encoder.transform(train_labels)
 
     x_train, x_test, y_train, y_test = train_test_split(train_data, encoded_labels, test_size=0.2)
+
+    print(f"Counts:\nTrain: {len(x_train)}, {len(y_train)}\nTest: {len(x_test)}, {len(y_test)}")
+    print(f"Shapes:\nTrain: {x_train.shape}, {y_train.shape}\nTest: {x_test.shape}, {y_test.shape}")
 
     return x_train, x_test, y_train, y_test
