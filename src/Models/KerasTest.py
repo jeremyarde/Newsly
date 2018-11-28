@@ -25,3 +25,4 @@ config.read('../config.ini')
 
 def keras_train(x_train, y_train, x_test, y_test):
     sns.countplot(y_train)
+
