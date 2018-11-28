@@ -84,10 +84,10 @@ def get_data(deep_model: bool=False):
 
     # tfidf stuff
     tokenizer = Tokenizer(num_words=100)
-    tokenizer.fit_on_texts(text_data.tolist())
+    tokenizer.fit_on_texts(text_data)
 
     modes = ['count', 'binary', 'tfidf', 'freq']
-    encoded_text_data = tokenizer.texts_to_matrix(text_data.tolist(), mode='freq')
+    encoded_text_data = tokenizer.texts_to_matrix(text_data.tolist(), mode='tfidf')
     train_data = encoded_text_data
 
     print_distribution(train_labels)
