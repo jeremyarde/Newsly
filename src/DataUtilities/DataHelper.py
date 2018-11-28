@@ -4,6 +4,7 @@ from configparser import ConfigParser
 import xlrd as xlrd
 from cloudpickle import cloudpickle
 from keras_preprocessing.text import Tokenizer
+from sklearn import preprocessing
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 import pandas as pd
@@ -53,16 +54,22 @@ def get_series_from_df(df_data: pd.DataFrame, inputs: dict):
     return samples, labels
 
 
+def print_distribution(train_labels):
+    sns.countplot(train_labels)
+    plt.xlabel('Label')
+    plt.title('Distribution of data')
+
+
 def get_data():
     df_data = get_data_from_source()
     # samples, labels = get_series_from_df(df_data, {'inputs': 'BIAS', 'labels': 'CLASS'})
 
-    # biases_unique = df['BIAS'].astype('U').unique()
-    # classes = df['CLASS'].unique()
+    biases_unique = set(df_data['BIAS'].astype('U').unique())
+    biases_unique = biases_unique - {'fake', 'pseudoscience'}
+    classes = df_data['CLASS'].unique()
 
     # filter out the undesired labels:
-    bias_classes = ['right, Least-biased', 'left', 'Left-center', 'Right-center']
-    df_data = df_data[df_data['BIAS'].isin(bias_classes)]
+    df_data = df_data[df_data['BIAS'].isin(biases_unique)]
 
     # sources = df['SOURCE']
     # titles = df['TITLE']
@@ -71,8 +78,8 @@ def get_data():
     # text_data = df_data['TITLE'].str.replace('\n', '')
     # train_labels = df_data['BIAS'].str.replace('\n', '')
 
-    train_labels = df_data['BIAS']
-    text_data = df_data['TITLE']
+    train_labels = df_data['BIAS'].astype('U')
+    text_data = df_data['TITLE'].astype('U')
     text_data = text_data.values.astype('U')
 
     # tfidf stuff
@@ -83,12 +90,11 @@ def get_data():
     encoded_text_data = tokenizer.texts_to_matrix(text_data.tolist(), mode='freq')
     train_data = encoded_text_data
 
-    # train_data = vectorizer.fit_transform(text_data)
-    train_labels = train_labels.astype('U')
+    print_distribution(train_labels)
 
-    sns.countplot(train_labels)
-    plt.xlabel('Label')
-    plt.title('Distribution of data')
+    # turn the labels into one hot encoded versions
+    one_hot_encoder = preprocessing.LabelEncoder()
+    train_labels = one_hot_encoder.fit(train_labels)
 
     x_train, x_test, y_train, y_test = train_test_split(train_data, train_labels, test_size=0.2)
 
