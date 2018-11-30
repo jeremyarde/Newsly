@@ -5,7 +5,7 @@ import xlrd as xlrd
 from cloudpickle import cloudpickle
 from keras_preprocessing.text import Tokenizer
 from sklearn import preprocessing
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.model_selection import train_test_split
 import pandas as pd
 import numpy as np
@@ -79,7 +79,7 @@ def get_data(deep_model: bool=False):
     # train_labels = df_data['BIAS'].str.replace('\n', '')
 
     train_labels = df_data['BIAS'].astype('U')
-    text_data = df_data['TEXT'].astype('U')
+    train_data = df_data['TEXT'].astype('U')
 
     # # tfidf stuff
     # tokenizer = Tokenizer(num_words=100)
@@ -89,10 +89,13 @@ def get_data(deep_model: bool=False):
     # encoded_text_data = tokenizer.texts_to_matrix(text_data.tolist(), mode='tfidf')
     # train_data = encoded_text_data
 
-    vectorizer = TfidfVectorizer()
-    train_data = vectorizer.fit_transform(raw_documents=text_data)
+    if not deep_model:
+        # count_vect = CountVectorizer()
+        # train_data = count_vect.fit_transform(text_data)
+        vectorizer = TfidfVectorizer()
+        train_data = vectorizer.fit_transform(raw_documents=train_data )
 
-    print_distribution(train_labels)
+    # print_distribution(train_labels)
 
     x_train, x_test, y_train, y_test = train_test_split(train_data, train_labels, test_size=0.2)
 
