@@ -79,16 +79,18 @@ def get_data(deep_model: bool=False):
     # train_labels = df_data['BIAS'].str.replace('\n', '')
 
     train_labels = df_data['BIAS'].astype('U')
-    text_data = df_data['TITLE'].astype('U')
-    text_data = text_data.values.astype('U')
+    text_data = df_data['TEXT'].astype('U')
 
-    # tfidf stuff
-    tokenizer = Tokenizer(num_words=100)
-    tokenizer.fit_on_texts(text_data)
+    # # tfidf stuff
+    # tokenizer = Tokenizer(num_words=100)
+    # tokenizer.fit_on_texts(text_data)
+    #
+    # modes = ['count', 'binary', 'tfidf', 'freq']
+    # encoded_text_data = tokenizer.texts_to_matrix(text_data.tolist(), mode='tfidf')
+    # train_data = encoded_text_data
 
-    modes = ['count', 'binary', 'tfidf', 'freq']
-    encoded_text_data = tokenizer.texts_to_matrix(text_data.tolist(), mode='tfidf')
-    train_data = encoded_text_data
+    vectorizer = TfidfVectorizer()
+    train_data = vectorizer.fit_transform(raw_documents=text_data)
 
     print_distribution(train_labels)
 
@@ -104,7 +106,7 @@ def get_data(deep_model: bool=False):
         y_train = one_hot_encoder.fit_transform(y_train.reshape(-1, 1))
         y_test = one_hot_encoder.fit_transform(y_test.reshape(-1, 1))
 
-    print(f"Counts:\nTrain: {len(x_train)}, {len(y_train)}\nTest: {len(x_test)}, {len(y_test)}")
-    print(f"Shapes:\nTrain: {x_train.shape}, {y_train.shape}\nTest: {x_test.shape}, {y_test.shape}")
+        print(f"Counts:\nTrain: {len(x_train)}, {len(y_train)}\nTest: {len(x_test)}, {len(y_test)}")
+        print(f"Shapes:\nTrain: {x_train.shape}, {y_train.shape}\nTest: {x_test.shape}, {y_test.shape}")
 
     return x_train, x_test, y_train, y_test
