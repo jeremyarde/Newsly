@@ -21,6 +21,9 @@ from keras.preprocessing import sequence
 from keras.utils import to_categorical
 from keras.callbacks import EarlyStopping
 
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.datasets import fetch_20newsgroups
+from sklearn.datasets import fetch_20newsgroups_vectorized
 
 config = ConfigParser()
 config.read('../config.ini')
@@ -29,6 +32,10 @@ config.read('../config.ini')
 def read_csv(path_to_csv: str=''):
     df = pd.read_csv(path_to_csv, encoding='latin1')
     return df
+
+
+def save_csv(df: pd.DataFrame, file_name):
+    df.to_csv(file_name, encoding='utf-8')
 
 
 def read_excel(path_to_excel: str):
@@ -41,8 +48,8 @@ def ibc_data():
     return lib, con, neutral
 
 
-def get_data_from_source():
-    df = read_csv(config['PATHS']['DataCsv'])
+def get_data_from_source(csv_file):
+    df = read_csv(csv_file)
     df = df.dropna()  # drop all rows with nan
     return df
 
