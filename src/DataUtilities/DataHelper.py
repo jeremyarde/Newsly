@@ -67,8 +67,8 @@ def print_distribution(train_labels):
     plt.title('Distribution of data')
 
 
-def get_data(deep_model: bool=False):
-    df_data = get_data_from_source()
+def get_news_bias_data(deep_model: bool=False):
+    df_data = get_data_from_source(config['PATHS']['DataCsv'])
     # samples, labels = get_series_from_df(df_data, {'inputs': 'BIAS', 'labels': 'CLASS'})
 
     biases_unique = set(df_data['BIAS'].astype('U').unique())
@@ -96,27 +96,27 @@ def get_data(deep_model: bool=False):
     # encoded_text_data = tokenizer.texts_to_matrix(text_data.tolist(), mode='tfidf')
     # train_data = encoded_text_data
 
-    if not deep_model:
-        # count_vect = CountVectorizer()
-        # train_data = count_vect.fit_transform(text_data)
-        vectorizer = TfidfVectorizer()
-        train_data = vectorizer.fit_transform(raw_documents=train_data )
-
-    # print_distribution(train_labels)
+    # if not deep_model:
+    #     # count_vect = CountVectorizer()
+    #     # train_data = count_vect.fit_transform(text_data)
+    #     vectorizer = TfidfVectorizer()
+    #     train_data = vectorizer.fit_transform(raw_documents=train_data )
+    #     print(f"Number of unique words: {len(vectorizer.get_feature_names())}")
+    # # print_distribution(train_labels)
 
     x_train, x_test, y_train, y_test = train_test_split(train_data, train_labels, test_size=0.2)
+    #
+    # # turn the labels into one hot encoded versions
+    # one_hot_encoder = preprocessing.LabelEncoder()
+    # y_train = one_hot_encoder.fit_transform(y_train)
+    # y_test = one_hot_encoder.fit_transform(y_test)
+    #
+    # if deep_model:
+    #     one_hot_encoder = preprocessing.OneHotEncoder()
+    #     y_train = one_hot_encoder.fit_transform(y_train.reshape(-1, 1))
+    #     y_test = one_hot_encoder.fit_transform(y_test.reshape(-1, 1))
 
-    # turn the labels into one hot encoded versions
-    one_hot_encoder = preprocessing.LabelEncoder()
-    y_train = one_hot_encoder.fit_transform(y_train)
-    y_test = one_hot_encoder.fit_transform(y_test)
-
-    if deep_model:
-        one_hot_encoder = preprocessing.OneHotEncoder()
-        y_train = one_hot_encoder.fit_transform(y_train.reshape(-1, 1))
-        y_test = one_hot_encoder.fit_transform(y_test.reshape(-1, 1))
-
-        print(f"Counts:\nTrain: {len(x_train)}, {len(y_train)}\nTest: {len(x_test)}, {len(y_test)}")
-        print(f"Shapes:\nTrain: {x_train.shape}, {y_train.shape}\nTest: {x_test.shape}, {y_test.shape}")
+        # print(f"Counts:\nTrain: {len(x_train)}, {len(y_train)}\nTest: {len(x_test)}, {len(y_test)}")
+        # print(f"Shapes:\nTrain: {x_train.shape}, {y_train.shape}\nTest: {x_test.shape}, {y_test.shape}")
 
     return x_train, x_test, y_train, y_test
