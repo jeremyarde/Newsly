@@ -13,7 +13,6 @@ class DataCleaner:
 
     @staticmethod
     def _remove_nonsense_words(df: pd.DataFrame):
-        sentence = ""
         exclusions = ['SOURCE', 'CLASS', 'BIAS']
         for col in df.columns:
             if col not in exclusions:
@@ -23,5 +22,4 @@ class DataCleaner:
                     sentence = [x for x in tokens if x in words]
                     sentence = " ".join(sentence)
                     df[col][index] = sentence
-                    # sentence = contents.lower().join(w for w in nltk.wordpunct_tokenize(contents) if w in words or not w.isalpha())
         return df
