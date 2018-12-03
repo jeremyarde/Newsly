@@ -35,9 +35,11 @@ one_hot_encoder = preprocessing.LabelEncoder()
 y_train = one_hot_encoder.fit_transform(y_train)
 y_test = one_hot_encoder.fit_transform(y_test)
 
-model = Keras(max_words=100, num_classes=len(labels))
-model.keras_train(x_train, y_train, x_test, y_test)
-# SklearnTest.run_sklearn(x_train, y_train, x_test, y_test)
+y_train = keras.utils.to_categorical(y_train, len(labels))
+y_test = keras.utils.to_categorical(y_test, len(labels))
 
+model = Keras(max_words=100, num_classes=len(labels))
+model.keras_train(x_train=x_train, y_train=y_train, x_test=x_test, y_test=y_test)
+# SklearnTest.run_sklearn(x_train, y_train, x_test, y_test)
 
 print("Done")

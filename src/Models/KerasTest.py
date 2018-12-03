@@ -39,13 +39,13 @@ class Keras:
         print(self.model.metrics_names)
 
     def keras_train(self, x_train, y_train, x_test, y_test):
-        sns.countplot(y_train)
+        # sns.countplot(y_train)
 
-        batch_size = 32
-        epochs = 3
+        batch_size = 100
+        epochs = 50
 
-        history = self.model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, verbose=1,
-                                 validation_split=0.1)
+        history = self.model.fit(x_train, y_train, batch_size=batch_size,
+                                 epochs=epochs, verbose=1, validation_split=0.1)
         score = self.model.evaluate(x_test, y_test, batch_size=batch_size, verbose=1)
         print('Test loss:', score[0])
         print('Test accuracy:', score[1])
