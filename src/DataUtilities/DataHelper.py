@@ -104,7 +104,7 @@ def get_news_bias_data(deep_model: bool=False):
     #     print(f"Number of unique words: {len(vectorizer.get_feature_names())}")
     # # print_distribution(train_labels)
 
-    x_train, x_test, y_train, y_test = train_test_split(train_data, train_labels, test_size=0.2)
+    x_train, y_train, x_test, y_test = train_test_split(train_data, train_labels, test_size=0.2)
     #
     # # turn the labels into one hot encoded versions
     # one_hot_encoder = preprocessing.LabelEncoder()
@@ -119,4 +119,5 @@ def get_news_bias_data(deep_model: bool=False):
         # print(f"Counts:\nTrain: {len(x_train)}, {len(y_train)}\nTest: {len(x_test)}, {len(y_test)}")
         # print(f"Shapes:\nTrain: {x_train.shape}, {y_train.shape}\nTest: {x_test.shape}, {y_test.shape}")
 
-    return x_train, x_test, y_train, y_test
+    labels = biases_unique
+    return x_train, x_test, y_train, y_test, labels
