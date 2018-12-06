@@ -24,25 +24,60 @@ config = ConfigParser()
 config.read('../config.ini')
 
 
-class Keras:
-    def __init__(self, num_classes, max_words):
-        self.tokenizer = Tokenizer(num_words=max_words)
-        self.num_classes = num_classes
+def create_model(num_classes: int = 5, max_words: int = 100):
+    model = Sequential()
+    model.add(Dense(512, input_shape=(max_words,)))
+    model.add(Activation('relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(num_classes))
+    model.add(Activation('softmax'))
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    print(model.metrics_names)
+    return model
 
+
+class Keras:
+    def __init__(self, num_classes: int = 5, max_words: int = 100,
+                 activation: str='relu', dropout: float=0.5,
+                 optimizer: str='adam', dense_layers: int=512, **kwargs):
+        self.dense_layers = dense_layers
+        self.optimizer = optimizer
+        self.activation = activation
+        self.dropout = dropout
+        self.num_classes = num_classes
+        self.max_words = max_words
+        self.model = None
+
+    def fit(self, x_train, y_train, **kwargs):
+        self.model.fit(x_train, y_train, **kwargs)
+
+    def score(self, x_test, y_test):
+        self.model.evaluate(x_test, y_test, verbose=1)
+
+    def get_params(self):
+        return dict(num_classes=self.num_classes, max_words=self.max_words, activation=self.activation, dropout=self.dropout, optimizer=self.optimizer)
+
+    def set_params(self, **kwargs):
+        self.optimizer = kwargs['optimizer']
+        self.activation = kwargs['activation']
+        self.dropout = kwargs['dropout']
+        self.num_classes = kwargs['num_classes']
+
+    def create_model(self):
         self.model = Sequential()
-        self.model.add(Dense(512, input_shape=(max_words,)))
-        self.model.add(Activation('relu'))
-        self.model.add(Dropout(0.5))
-        self.model.add(Dense(num_classes))
+        self.model.add(Dense(self.dense_layers, input_shape=(self.max_words,)))
+        self.model.add(Activation(self.activation))
+        self.model.add(Dropout(self.dropout))
+        self.model.add(Dense(self.num_classes))
         self.model.add(Activation('softmax'))
-        self.model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+        self.model.compile(loss='categorical_crossentropy', optimizer=self.optimizer, metrics=['accuracy'])
         print(self.model.metrics_names)
 
     def keras_train(self, x_train, y_train, x_test, y_test):
         # sns.countplot(y_train)
 
         batch_size = 100
-        epochs = 50
+        epochs = 30
 
         history = self.model.fit(x_train, y_train, batch_size=batch_size,
                                  epochs=epochs, verbose=1, validation_split=0.1)
