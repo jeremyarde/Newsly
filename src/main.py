@@ -48,12 +48,12 @@ param_grid = dict(
     epochs=[1, 10, 30],
     batch_size=[10, 100, 500, 1000, 2000],
     dense_layers=[128, 512],
-    optimizer=['adam', 'sgd', 'nadam'],
+    optimizer=['adam', 'sgd', 'nadam', 'adadelta'],
     activation=['relu', 'softmax', 'elu', 'tanh', 'linear'],
     dropout=[0.0, 0.5, 0.75]
 )
 
-grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1)
+grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=1)
 grid_result = grid.fit(x_train, y_train)
 
 print("Done")

@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from keras import Sequential
+from keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
@@ -23,7 +24,7 @@ from src.DataUtilities import DataHelper
 config = ConfigParser()
 config.read('../config.ini')
 
-
+#
 def create_model(num_classes: int = 5, max_words: int = 100):
     model = Sequential()
     model.add(Dense(512, input_shape=(max_words,)))
@@ -36,33 +37,7 @@ def create_model(num_classes: int = 5, max_words: int = 100):
     return model
 
 
-class Keras:
-    def __init__(self, num_classes: int = 5, max_words: int = 100,
-                 activation: str='relu', dropout: float=0.5,
-                 optimizer: str='adam', dense_layers: int=512, **kwargs):
-        self.dense_layers = dense_layers
-        self.optimizer = optimizer
-        self.activation = activation
-        self.dropout = dropout
-        self.num_classes = num_classes
-        self.max_words = max_words
-        self.model = None
-
-    def fit(self, x_train, y_train, **kwargs):
-        self.model.fit(x_train, y_train, **kwargs)
-
-    def score(self, x_test, y_test):
-        self.model.evaluate(x_test, y_test, verbose=1)
-
-    def get_params(self):
-        return dict(num_classes=self.num_classes, max_words=self.max_words, activation=self.activation, dropout=self.dropout, optimizer=self.optimizer)
-
-    def set_params(self, **kwargs):
-        self.optimizer = kwargs['optimizer']
-        self.activation = kwargs['activation']
-        self.dropout = kwargs['dropout']
-        self.num_classes = kwargs['num_classes']
-
+class Keras(KerasClassifier):
     def create_model(self):
         self.model = Sequential()
         self.model.add(Dense(self.dense_layers, input_shape=(self.max_words,)))
@@ -72,6 +47,48 @@ class Keras:
         self.model.add(Activation('softmax'))
         self.model.compile(loss='categorical_crossentropy', optimizer=self.optimizer, metrics=['accuracy'])
         print(self.model.metrics_names)
+
+    def __init__(self, batch_size: int = 100, epochs: int = 10, num_classes: int = 5, max_words: int = 100,
+                 activation: str = 'relu', dropout: float = 0.5, optimizer: str = 'adam', dense_layers: int = 512,
+                 build_fn=None, **kwargs):
+        self.deep_model = True
+        self.dense_layers = dense_layers
+        self.optimizer = optimizer
+        self.activation = activation
+        self.dropout = dropout
+        self.num_classes = num_classes
+        self.max_words = max_words
+        self.batch_size = batch_size
+        self.epochs = epochs
+        self.model = create_model()
+        super().__init__(build_fn, **kwargs)
+
+    def fit(self, x_train, y_train, **kwargs):
+        self.model.fit(x_train, y_train, batch_size=self.batch_size,
+                       epochs=self.epochs, verbose=1, validation_split=0.1)
+
+    def score(self, x_test, y_test, **kwargs):
+        score = self.model.evaluate(x_test, y_test, verbose=1)
+        # 0 = test loss
+        # 1 = accuracy
+        return score[1]
+
+    def get_params(self, deep: bool=True):
+        return dict(num_classes=self.num_classes,
+                    max_words=self.max_words,
+                    activation=self.activation,
+                    dropout=self.dropout,
+                    optimizer=self.optimizer,
+                    dense_layers=self.dense_layers,
+                    )
+
+    def set_params(self, **kwargs):
+        self.optimizer = kwargs['optimizer']
+        self.activation = kwargs['activation']
+        self.dropout = kwargs['dropout']
+        self.dense_layers = kwargs['dense_layers']
+        self.epochs = kwargs['epochs']
+        self.batch_size = kwargs['batch_size']
 
     def keras_train(self, x_train, y_train, x_test, y_test):
         # sns.countplot(y_train)
