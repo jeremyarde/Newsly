@@ -25,7 +25,7 @@ config = ConfigParser()
 config.read('../config.ini')
 
 #
-def create_model(num_classes: int = 5, max_words: int = 100):
+def create_model(num_classes: int = 5, max_words: int = 200):
     model = Sequential()
     model.add(Dense(512, input_shape=(max_words,)))
     model.add(Activation('relu'))
@@ -48,7 +48,7 @@ class Keras(KerasClassifier):
         self.model.compile(loss='categorical_crossentropy', optimizer=self.optimizer, metrics=['accuracy'])
         print(self.model.metrics_names)
 
-    def __init__(self, batch_size: int = 100, epochs: int = 10, num_classes: int = 5, max_words: int = 100,
+    def __init__(self, batch_size: int = 100, epochs: int = 10, num_classes: int = 5, max_words: int = 200,
                  activation: str = 'relu', dropout: float = 0.5, optimizer: str = 'adam', dense_layers: int = 512,
                  build_fn=None, **kwargs):
         self.deep_model = True
@@ -60,8 +60,9 @@ class Keras(KerasClassifier):
         self.max_words = max_words
         self.batch_size = batch_size
         self.epochs = epochs
+        self.max_words = max_words
         self.model = create_model()
-        super().__init__(build_fn, **kwargs)
+        # super().__init__(build_fn, **kwargs)
 
     def fit(self, x_train, y_train, **kwargs):
         self.model.fit(x_train, y_train, batch_size=self.batch_size,
@@ -75,7 +76,7 @@ class Keras(KerasClassifier):
 
     def get_params(self, deep: bool=True):
         return dict(num_classes=self.num_classes,
-                    max_words=self.max_words,
+                    epochs=self.epochs,
                     activation=self.activation,
                     dropout=self.dropout,
                     optimizer=self.optimizer,
