@@ -45,12 +45,21 @@ model = Keras(max_words=num_words, num_classes=len(labels))
 
 # Testing grid search
 param_grid = dict(
-    epochs=[1, 10, 30],
-    batch_size=[10, 100, 500, 1000, 2000],
-    dense_layers=[128, 512],
-    optimizer=['adam', 'sgd', 'nadam', 'adadelta'],
-    activation=['relu', 'softmax', 'elu', 'tanh', 'linear'],
-    dropout=[0.0, 0.5, 0.75]
+    epochs=[30],
+    batch_size=[500],
+    dense_layers=[128],
+    optimizer=['adam',
+               'sgd',
+               'nadam?',
+               'adad?elta'
+               ],
+    activation=['relu',
+                'softmax',
+                'elu',
+                'tanh',
+                'linear'
+                ],
+    dropout=[0.5]
 )
 
 grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=1)

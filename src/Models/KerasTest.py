@@ -57,7 +57,7 @@ class Keras(KerasClassifier):
         self.activation = activation
         self.dropout = dropout
         self.num_classes = num_classes
-        self.max_words = max_words
+
         self.batch_size = batch_size
         self.epochs = epochs
         self.max_words = max_words
@@ -90,6 +90,8 @@ class Keras(KerasClassifier):
         self.dense_layers = kwargs['dense_layers']
         self.epochs = kwargs['epochs']
         self.batch_size = kwargs['batch_size']
+        return self
+
 
     def keras_train(self, x_train, y_train, x_test, y_test):
         # sns.countplot(y_train)
