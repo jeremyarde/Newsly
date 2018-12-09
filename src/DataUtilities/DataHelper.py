@@ -31,8 +31,13 @@ config.read('../config.ini')
 
 
 def pickle_object(filename: str, obj_to_pickle: object):
-    with open(os.path.join('../Data/', filename), "wb") as f:
+    with open(os.path.join('../Data/', filename) + ".dill", "wb") as f:
         dill.dump(obj_to_pickle, f)
+
+
+def unpickle_object(filename: str, obj_to_unpickle: object):
+    obj = dill.load(filename)
+    return obj
 
 
 def read_csv(path_to_csv: str=''):
