@@ -1,6 +1,7 @@
 import os
 from configparser import ConfigParser
 
+import dill
 import xlrd as xlrd
 from cloudpickle import cloudpickle
 from keras_preprocessing.text import Tokenizer
@@ -27,6 +28,11 @@ from sklearn.datasets import fetch_20newsgroups_vectorized
 
 config = ConfigParser()
 config.read('../config.ini')
+
+
+def pickle_object(filename: str, obj_to_pickle: object):
+    with open(os.path.join('../Data/', filename), "wb") as f:
+        dill.dump(obj_to_pickle, f)
 
 
 def read_csv(path_to_csv: str=''):
