@@ -45,7 +45,10 @@ class Keras(KerasClassifier):
         self.model.add(Dropout(self.dropout))
         self.model.add(Dense(self.num_classes))
         self.model.add(Activation('softmax'))
-        self.model.compile(loss='categorical_crossentropy', optimizer=self.optimizer, metrics=['accuracy'])
+        self.model.compile(
+            loss='categorical_crossentropy',
+            optimizer=self.optimizer,
+            metrics=['accuracy'])
         print(self.model.metrics_names)
 
     def __init__(self, batch_size: int = 100, epochs: int = 10, num_classes: int = 5, max_words: int = 200,

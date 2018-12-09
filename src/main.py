@@ -18,19 +18,18 @@ from src.Models.KerasTest import Keras
 config = ConfigParser()
 config.read('../config.ini')
 
-# dc = DataCleaner()
-# dc.clean(config['PATHS']['DataCsv'], "../Data/removed_nonsense.csv")
+DataHelper.pickle_object('thing', [1])
+num_words = 5000
 
-num_words = 200
+# x_train, y_train, x_test, y_test, labels = DataHelper.get_news_bias_data(deep_model=True)
+x_train, y_train, x_test, y_test, labels = DataHelper.get_bbc_news_data()
 
-x_train, y_train, x_test, y_test, labels = DataHelper.get_news_bias_data(deep_model=True)
 
 tokenizer = Tokenizer(num_words=num_words)
 tokenizer.fit_on_texts(x_train)
 x_train = tokenizer.texts_to_matrix(x_train, 'binary')
 x_test = tokenizer.texts_to_matrix(x_test, 'binary')
-# x_train = tokenizer.sequences_to_matrix(x_train.tolist(), mode='tfidf')
-# x_test = tokenizer.sequences_to_matrix(x_test.tolist(), mode='tfidf')
+
 
 one_hot_encoder = preprocessing.LabelEncoder()
 y_train = one_hot_encoder.fit_transform(y_train)
@@ -39,44 +38,49 @@ y_test = one_hot_encoder.fit_transform(y_test)
 y_train = keras.utils.to_categorical(y_train, len(labels))
 y_test = keras.utils.to_categorical(y_test, len(labels))
 
-model = Keras(max_words=num_words, num_classes=len(labels))
-# model.keras_train(x_train=x_train, y_train=y_train, x_test=x_test, y_test=y_test)
-# SklearnTest.run_sklearn(x_train, y_train, x_test, y_test)
+# PICKLE THE DATA
+# DataHelper.pickle_object('y_train', y_train)
+# DataHelper.pickle_object('x_train', x_train)
+# DataHelper.pickle_object('y_test', y_test)
+# DataHelper.pickle_object('x_test', x_test)
 
+
+# GRID SEARCHING
+model = Keras(max_words=num_words, num_classes=len(labels))
 
 # Testing grid search
 param_grid = dict(
-    epochs=[30],
+    epochs=[10, 30, 50],
     batch_size=[500],
     dense_layers=[
-        # 30,
-        # 60,
-        # 128,
-        # 150,
-        # 200,
-        250,
-        350,
-        500,
-        1000,
+        30,
+        60,
+        128,
+        150,
+        200,
+        # 250,
+        # 350,
+        # 500,
+        # 1000,
         2000
     ],
     optimizer=[
-        # 'adam',
-        # 'sgd',
-        # 'nadam?',
-        'adad?elta'
+        'adam',
+        'sgd',
+        'nadam?',
+        'adadelta'
     ],
     activation=[
-        # 'relu',
-        # 'softmax',
+        'relu',
+        'softmax',
         'elu',
-        # 'tanh',
-        # 'linear'
+        'tanh',
+        'linear'
     ],
     dropout=[
         # 0.0,
-        # 0.5,
-        # 0.75,
+        0.5,
+        0.75,
         0.90
     ]
 )
