@@ -78,7 +78,23 @@ def print_distribution(train_labels):
     plt.title('Distribution of data')
 
 
-def get_news_bias_data(deep_model: bool=False):
+def get_bbc_news_data():
+    df_data = get_data_from_source("C:\\Users\\Jeremy\\Documents\\Datasets\\BBC_news_dataset.csv")
+
+    # biases_unique = set(df_data['BIAS'].astype('U').unique())
+    # biases_unique = biases_unique - {'fake', 'pseudoscience'}
+    classes = df_data['type'].unique()
+
+    train_labels = df_data['type'].astype('U')
+    train_data = df_data['news'].astype('U')
+
+    x_train, x_test, y_train, y_test = train_test_split(train_data, train_labels, test_size=0.2)
+
+    labels = classes
+    return x_train, x_test, y_train, y_test, labels
+
+
+def get_news_bias_data():
     df_data = get_data_from_source(config['PATHS']['DataCsv'])
     # samples, labels = get_series_from_df(df_data, {'inputs': 'BIAS', 'labels': 'CLASS'})
 
@@ -115,7 +131,7 @@ def get_news_bias_data(deep_model: bool=False):
     #     print(f"Number of unique words: {len(vectorizer.get_feature_names())}")
     # # print_distribution(train_labels)
 
-    x_train, y_train, x_test, y_test = train_test_split(train_data, train_labels, test_size=0.2)
+    x_train, x_test, y_train, y_test = train_test_split(train_data, train_labels, test_size=0.2)
     #
     # # turn the labels into one hot encoded versions
     # one_hot_encoder = preprocessing.LabelEncoder()
