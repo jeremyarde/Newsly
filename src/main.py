@@ -22,7 +22,7 @@ DataHelper.pickle_object('thing', [1])
 num_words = 5000
 
 # x_train, y_train, x_test, y_test, labels = DataHelper.get_news_bias_data(deep_model=True)
-x_train, y_train, x_test, y_test, labels = DataHelper.get_bbc_news_data()
+x_train, x_test, y_train, y_test, labels = DataHelper.get_bbc_news_data()
 
 
 tokenizer = Tokenizer(num_words=num_words)
