@@ -50,8 +50,8 @@ model = Keras(max_words=num_words, num_classes=len(labels))
 
 # Testing grid search
 param_grid = dict(
-    epochs=[10, 30, 50],
-    batch_size=[500],
+    epochs=[10, 30],
+    batch_size=[10, 100],
     dense_layers=[
         30,
         60,
@@ -65,17 +65,17 @@ param_grid = dict(
         2000
     ],
     optimizer=[
-        'adam',
-        'sgd',
-        'nadam?',
+        # 'adam',
+        # 'sgd',
+        'nadam',
         'adadelta'
     ],
     activation=[
-        'relu',
+        # 'relu',
         'softmax',
-        'elu',
-        'tanh',
-        'linear'
+        # 'elu',
+        # 'tanh',
+        # 'linear'
     ],
     dropout=[
         # 0.0,
