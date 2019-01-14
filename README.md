@@ -6,4 +6,4 @@ Jeremy Arde
 
 ### License
 
-### Ackowledgments
+### Acknowledgments

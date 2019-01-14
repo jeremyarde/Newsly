@@ -1,98 +1,49 @@
 import os
+import pandas
 from configparser import ConfigParser
 
-import dill
-import keras
-import tensorflow as tf
-from keras.preprocessing.text import Tokenizer
-from sklearn import preprocessing
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.model_selection import train_test_split, GridSearchCV
-from nltk import corpus
+from nltk import RegexpTokenizer
 
-from src.DataUtilities import DataHelper
-from src.DataUtilities.DataCleaner import DataCleaner
-from src.Models import SklearnTest, KerasTest
-from src.Models.KerasTest import Keras
+from src import TweetGrabber, ModelBuilder
+
+from collections import Counter
+from keras.preprocessing.text import Tokenizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from nltk.corpus import stopwords
+
+stopwords = stopwords.words('english')
 
 config = ConfigParser()
 config.read('../config.ini')
 
-DataHelper.pickle_object('thing', [1])
-num_words = 5000
+# ModelBuilder.build_model()
 
-# x_train, y_train, x_test, y_test, labels = DataHelper.get_news_bias_data(deep_model=True)
-x_train, y_train, x_test, y_test, labels = DataHelper.get_bbc_news_data()
+entities = ['indiginous', 'development', 'human rights', 'crime', 'budget', 'housing']
+people = ['Vivs4PDW', 'JaniceLukes', 'kevinkleinwpg', 'cindygilroy', 'B_MayesSTV']
 
-
-tokenizer = Tokenizer(num_words=num_words)
-tokenizer.fit_on_texts(x_train)
-x_train = tokenizer.texts_to_matrix(x_train, 'binary')
-x_test = tokenizer.texts_to_matrix(x_test, 'binary')
+people_tweets = []
+for person in people:
+    tweets = TweetGrabber.grab_tweets(person)
+    people_tweets.append(tweets)
 
 
-one_hot_encoder = preprocessing.LabelEncoder()
-y_train = one_hot_encoder.fit_transform(y_train)
-y_test = one_hot_encoder.fit_transform(y_test)
+tweet_text_list = []
+for person_tweets in people_tweets:
+    person_tweet_text = []
+    for tweet in person_tweets:
+        person_tweet_text.append(tweet.get('tweet_text')[0])
 
-y_train = keras.utils.to_categorical(y_train, len(labels))
-y_test = keras.utils.to_categorical(y_test, len(labels))
+    # string_list = ["".join(x) for x in person_tweets]
 
-# PICKLE THE DATA
-# DataHelper.pickle_object('y_train', y_train)
-# DataHelper.pickle_object('x_train', x_train)
-# DataHelper.pickle_object('y_test', y_test)
-# DataHelper.pickle_object('x_test', x_test)
+    tokenizer = RegexpTokenizer(r'\w+')
+    zen_no_punc = tokenizer.tokenize(' '.join(string_list))
+    word_count_dict = Counter(w.title() for w in zen_no_punc if w.lower() not in stopwords.words())
+    common = word_count_dict.most_common()
+
+    word_freq_df = pandas.DataFrame(common)
+
+    df = pandas.concat([df, word_freq_df])
 
 
-# GRID SEARCHING
-model = Keras(max_words=num_words, num_classes=len(labels))
-
-# Testing grid search
-param_grid = dict(
-    epochs=[10, 30, 50],
-    batch_size=[500],
-    dense_layers=[
-        30,
-        60,
-        128,
-        150,
-        200,
-        # 250,
-        # 350,
-        # 500,
-        # 1000,
-        2000
-    ],
-    optimizer=[
-        'adam',
-        'sgd',
-        'nadam?',
-        'adadelta'
-    ],
-    activation=[
-        'relu',
-        'softmax',
-        'elu',
-        'tanh',
-        'linear'
-    ],
-    dropout=[
-        # 0.0,
-        0.5,
-        0.75,
-        0.90
-    ]
-)
-
-grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=1)
-grid_result = grid.fit(x_train, y_train)
-
-best_model = Keras(**grid_result.best_params_)
-best_model.fit(x_train, y_train)
-best_model.model.evaluate(x_test, y_test)
-
-pickled_model = best_model
-with open("model_test.dill", "wb") as f:
-    dill.dump((best_model), f)
-print("Done")
+# remove_list = ['Https', 'Co', 'Rt', 'Amp']
+df.to_csv("word_counts.csv")

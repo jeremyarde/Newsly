@@ -24,17 +24,17 @@ from src.DataUtilities import DataHelper
 config = ConfigParser()
 config.read('../config.ini')
 
-#
-def create_model(num_classes: int = 5, max_words: int = 200):
-    model = Sequential()
-    model.add(Dense(512, input_shape=(max_words,)))
-    model.add(Activation('relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(num_classes))
-    model.add(Activation('softmax'))
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    print(model.metrics_names)
-    return model
+
+# def create_model(num_classes: int = 5, max_words: int = 200):
+#     model = Sequential()
+#     model.add(Dense(512, input_shape=(max_words,)))
+#     model.add(Activation('relu'))
+#     model.add(Dropout(0.5))
+#     model.add(Dense(num_classes))
+#     model.add(Activation('softmax'))
+#     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+#     print(model.metrics_names)
+#     return model
 
 
 class Keras(KerasClassifier):
@@ -50,8 +50,9 @@ class Keras(KerasClassifier):
             optimizer=self.optimizer,
             metrics=['accuracy'])
         print(self.model.metrics_names)
+        return self.model
 
-    def __init__(self, batch_size: int = 100, epochs: int = 10, num_classes: int = 5, max_words: int = 200,
+    def __init__(self, batch_size: int = 100, epochs: int = 10, num_classes: int = 5, max_words: int = 5000,
                  activation: str = 'relu', dropout: float = 0.5, optimizer: str = 'adam', dense_layers: int = 512,
                  build_fn=None, **kwargs):
         self.deep_model = True
@@ -64,7 +65,7 @@ class Keras(KerasClassifier):
         self.batch_size = batch_size
         self.epochs = epochs
         self.max_words = max_words
-        self.model = create_model()
+        self.model = self.create_model()
         # super().__init__(build_fn, **kwargs)
 
     def fit(self, x_train, y_train, **kwargs):
