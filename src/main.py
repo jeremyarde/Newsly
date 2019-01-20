@@ -18,7 +18,6 @@ from src.Models.KerasTest import Keras
 config = ConfigParser()
 config.read('../config.ini')
 
-DataHelper.pickle_object('thing', [1])
 num_words = 5000
 
 # x_train, y_train, x_test, y_test, labels = DataHelper.get_news_bias_data(deep_model=True)
@@ -62,7 +61,7 @@ param_grid = dict(
         # 350,
         # 500,
         # 1000,
-        2000
+        # 2000
     ],
     optimizer=[
         # 'adam',
@@ -92,7 +91,4 @@ best_model = Keras(**grid_result.best_params_)
 best_model.fit(x_train, y_train)
 best_model.model.evaluate(x_test, y_test)
 
-pickled_model = best_model
-with open("model_test.dill", "wb") as f:
-    dill.dump((best_model), f)
 print("Done")
