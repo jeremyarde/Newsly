@@ -39,17 +39,19 @@ def grab_tweets(username: str):
     # Getting the tweets from the API then printing the text
     public_tweets = api.user_timeline(screen_name=username, count=200, include_rts=1, exclude_replies=True, trim_user=True)
 
-    tweet_info = {
-        'id': [],
-        'username': [],
-        'created': [],
-        'tweet_text': [],
-        "retweets": [],
-        "users_mentioned": [],
-        "has_urls":[],
-        "retweeted_text": [],
-    }
+    all_tweets = []
     for status in public_tweets:
+        tweet_info = {
+            'id': [],
+            'username': [],
+            'created': [],
+            'tweet_text': [],
+            "retweets": [],
+            "users_mentioned": [],
+            "has_urls": [],
+            "retweeted_text": [],
+        }
+
         tweet_info.get("id").append(status.id)
         tweet_info.get('username').append(username),
         tweet_info.get('created').append(status.created_at),
@@ -57,4 +59,6 @@ def grab_tweets(username: str):
         tweet_info.get("retweets").append(status.retweet_count),
         tweet_info.get("users_mentioned").append(True if len(status.entities.get('user_mentions')) > 0 else False),
         tweet_info.get("has_urls").append(True if len(status.entities.get('urls')) > 0 else False)
-        tweet_info.get("retweeted_text").append(status.retweeted_status.text),
+        all_tweets.append(tweet_info)
+
+    return all_tweets
