@@ -2,7 +2,7 @@ import json
 
 import tweepy
 
-with open('../secret.json') as f:
+with open('../client_secret.json') as f:
     credentials = json.load(f)
 
 
