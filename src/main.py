@@ -33,16 +33,16 @@ tweet_text_list = []
 for person_tweets in people_tweets:
     person_tweet_text = []
     for tweet in person_tweets:
-        person_tweet_text.append(tweet.get('tweet_text')[0])
+        person_tweet_text.append(tweet.get('tweet_text'))
 
     # string_list = ["".join(x) for x in person_tweets]
 
     tokenizer = RegexpTokenizer(r'\w+')
-    zen_no_punc = tokenizer.tokenize(' '.join(string_list))
+    zen_no_punc = tokenizer.tokenize(' '.join(person_tweet_text))
     word_count_dict = Counter(w.title() for w in zen_no_punc if w.lower() not in stopwords.words())
     common = word_count_dict.most_common()
 
-    word_freq_df = pandas.DataFrame(common)
+    word_freq_df = pandas.DataFrame.from_dict(common, columns=[person_tweets[0]['username']])
 
     df = pandas.concat([df, word_freq_df])
 

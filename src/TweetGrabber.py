@@ -41,24 +41,10 @@ def grab_tweets(username: str):
 
     all_tweets = []
     for status in public_tweets:
-        tweet_info = {
-            'id': [],
-            'username': [],
-            'created': [],
-            'tweet_text': [],
-            "retweets": [],
-            "users_mentioned": [],
-            "has_urls": [],
-            "retweeted_text": [],
-        }
-
-        tweet_info.get("id").append(status.id)
-        tweet_info.get('username').append(username),
-        tweet_info.get('created').append(status.created_at),
-        tweet_info.get('tweet_text').append(status.text),
-        tweet_info.get("retweets").append(status.retweet_count),
-        tweet_info.get("users_mentioned").append(True if len(status.entities.get('user_mentions')) > 0 else False),
-        tweet_info.get("has_urls").append(True if len(status.entities.get('urls')) > 0 else False)
+        tweet_info = {'id': status.id, 'username': username, 'created': status.created_at, 'tweet_text': status.text,
+                      "retweets": status.retweet_count,
+                      "users_mentioned": True if len(status.entities.get('user_mentions')) > 0 else False,
+                      "has_urls": True if len(status.entities.get('urls')) > 0 else False, "id": status.id}
         all_tweets.append(tweet_info)
 
     return all_tweets
