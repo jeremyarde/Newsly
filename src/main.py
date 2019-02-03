@@ -26,7 +26,7 @@ for person in people:
     tweets = TweetGrabber.grab_tweets(person)
     people_tweets.append(tweets)
 
-
+df = pandas.DataFrame()
 tweet_text_list = []
 for person_tweets in people_tweets:
     person_tweet_text = []
