@@ -36,7 +36,7 @@ for person_tweets in people_tweets:
     # string_list = ["".join(x) for x in person_tweets]
 
     tokenizer = RegexpTokenizer(r'\w+')
-    zen_no_punc = tokenizer.tokenize(' '.join(string_list))
+    zen_no_punc = tokenizer.tokenize(' '.join(person_tweet_text))
     word_count_dict = Counter(w.title() for w in zen_no_punc if w.lower() not in stopwords.words())
     common = word_count_dict.most_common()
 
