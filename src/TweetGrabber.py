@@ -1,8 +1,8 @@
 import json
-
 import tweepy
 
-with open('../secret.json') as f:
+
+with open('../client_secret.json') as f:
     credentials = json.load(f)
 
 
@@ -42,7 +42,7 @@ def grab_tweets(username: str):
         tweet_info = {
             'id': status.id,
             'username': username,
-            'created': status.created_at,
+            'created': status.created_at.strftime("%m/%d/%Y, %H:%M:%S"),
             'tweet_text': status.text,
             "retweets": status.retweet_count,
             "users_mentioned": True if len(status.entities.get('user_mentions')) > 0 else False,
